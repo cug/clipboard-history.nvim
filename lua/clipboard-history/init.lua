@@ -25,8 +25,12 @@ end
 
 local function capture_clipboard()
 	local current = vim.fn.getreg('"')
-	if current and current ~= "" and current ~= history[1] then
-		add_to_history(current)
+	if current and current ~= "" then
+		-- Remove trailing newline
+		current = current:gsub("\n$", "")
+		if current ~= "" and current ~= history[1] then
+			add_to_history(current)
+		end
 	end
 end
 
@@ -38,6 +42,10 @@ M.setup = function(opts)
 			capture_clipboard()
 		end,
 	})
+
+	vim.api.nvim_create_user_command("ClipboardHistory", function()
+		require("clipboard-history.ui").show_history()
+	end, {})
 
 	vim.notify("Clipboard History plugin initialized", vim.log.levels.INFO)
 end
