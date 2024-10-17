@@ -21,11 +21,11 @@ local function create_window()
 	}
 
 	win = api.nvim_open_win(buf, true, opts)
-	api.nvim_buf_set_option(buf, "modifiable", false)
+	vim.bo[buf].modifiable = false
 end
 
 local function update_view(history)
-	api.nvim_buf_set_option(buf, "modifiable", true)
+	vim.bo[buf].modifiable = true
 	local lines = {}
 	for i, item in ipairs(history) do
 		local short_item = item:gsub("\n", "\\n"):sub(1, 50)
@@ -35,7 +35,7 @@ local function update_view(history)
 		table.insert(lines, string.format("%d. %s", i, short_item))
 	end
 	api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-	api.nvim_buf_set_option(buf, "modifiable", false)
+	vim.bo[buf].modifiable = false
 end
 
 local function close_window()

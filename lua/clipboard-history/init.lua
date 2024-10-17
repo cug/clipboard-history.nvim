@@ -1,24 +1,14 @@
 local M = {}
 
-local default_config = {
-	max_history = 100,
+local config = {
+	max_history = 30,
 }
-
-local config = {}
 
 local history = {}
 
-local function add_to_history(text)
-	for i, item in ipairs(history) do
-		if item == text then
-			table.remove(history, i)
-			break
-		end
-	end
-
-	table.insert(history, 1, text)
-
-	while #history > config.max_history do
+local function add_to_history(item)
+	table.insert(history, 1, item)
+	if #history > config.max_history then
 		table.remove(history)
 	end
 end
@@ -34,24 +24,19 @@ local function capture_clipboard()
 	end
 end
 
-M.setup = function(opts)
-	config = vim.tbl_deep_extend("force", default_config, opts or {})
+function M.setup(opts)
+	opts = opts or {}
+	config.max_history = opts.max_history or config.max_history
 
-	vim.api.nvim_create_autocmd({ "TextYankPost" }, {
-		callback = function()
-			capture_clipboard()
-		end,
+	vim.api.nvim_create_autocmd("TextYankPost", {
+		callback = capture_clipboard,
 	})
-
-	vim.api.nvim_create_user_command("ClipboardHistory", function()
-		require("clipboard-history.ui").show_history()
-	end, {})
-
-	vim.notify("Clipboard History plugin initialized", vim.log.levels.INFO)
 end
 
-M.get_history = function()
+function M.get_history()
 	return history
 end
+
+M.setup({})
 
 return M
