@@ -15,7 +15,7 @@ A Neovim plugin that maintains a history of yanked text and allows easy pasting 
 
 ```lua
 use {
-    'yourusername/clipboard-history.nvim',
+    'royanirudd/clipboard-history.nvim',
     config = function()
         vim.g.clipboard_history_max_history = 200  -- Optional: set max history (default 100)
     end
