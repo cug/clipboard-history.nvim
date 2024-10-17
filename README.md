@@ -65,12 +65,17 @@ In the clipboard history window
 - Press \<Enter> to select and paste an item
 - Press q to close the window without selecting
 
+To clear clipboard history
+```vim
+:ClipboardClear
+```
+Clears entire clipboard history
+
 ## Pull requests
 Feel free to change anything and submit a pull request!
 
 ## TODO
 - Add search functionality within history
-- Add command to clear clipboard history
 - Project persistant history, maintain context of where text is yanked from 
 - WSL2 Windows clipboard integration using 'clip.exe'
 - Telescope integration
