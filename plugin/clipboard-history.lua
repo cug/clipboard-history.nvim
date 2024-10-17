@@ -12,3 +12,7 @@ require("clipboard-history").setup({
 vim.api.nvim_create_user_command("ClipboardHistory", function()
 	require("clipboard-history.ui").show_history()
 end, {})
+
+vim.api.nvim_create_user_command("ClipboardClear", function()
+	require("clipboard-history").clear_history()
+end, {})

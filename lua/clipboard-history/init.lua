@@ -64,6 +64,11 @@ function M.get_history()
 	return _G.clipboard_history.items
 end
 
+function M.clear_history()
+	_G.clipboard_history.items = {}
+	print("Clipboard history cleared")
+end
+
 M.setup({})
 
 return M
