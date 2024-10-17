@@ -27,13 +27,35 @@ end
 local function update_view(history)
 	vim.bo[buf].modifiable = true
 	local lines = {}
-	for i, item in ipairs(history) do
-		local short_item = item:gsub("\n", "\\n"):sub(1, 50)
-		if #short_item < #item then
-			short_item = short_item .. "..."
+	local width = api.nvim_win_get_width(win) - 4 -- Subtract 4 for padding
+
+	local function wrap_text(text, max_width)
+		local wrapped = {}
+		for line in text:gmatch("[^\n]+") do
+			while #line > max_width do
+				local segment = line:sub(1, max_width)
+				table.insert(wrapped, segment)
+				line = line:sub(max_width + 1)
+			end
+			table.insert(wrapped, line)
 		end
-		table.insert(lines, string.format("%d. %s", i, short_item))
+		return wrapped
 	end
+
+	for i, item in ipairs(history) do
+		local wrapped = wrap_text(item, width - 3) -- Subtract 3 for the number prefix
+		local preview = string.format("%d. %s", i, wrapped[1])
+		table.insert(lines, preview)
+		if #wrapped > 1 then
+			if #wrapped > 2 then
+				table.insert(lines, string.format("   %s", wrapped[2]:sub(1, width - 6) .. "..."))
+			else
+				table.insert(lines, string.format("   %s", wrapped[2]))
+			end
+		end
+		table.insert(lines, "") -- Add an empty line between entries
+	end
+
 	api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 	vim.bo[buf].modifiable = false
 end
