@@ -61,7 +61,7 @@ local function select_item(history)
 end
 
 function M.show_history()
-	local history = require("clipboard-history").get_history()
+	local history = _G.clipboard_history.items
 	if #history == 0 then
 		print("Clipboard history is empty")
 		return
