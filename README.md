@@ -68,4 +68,13 @@ In the clipboard history window
 ## Pull requests
 Feel free to change anything and submit a pull request!
 
+## TODO
+- Add search functionality within history
+- Project persistant history, maintain context of where text is yanked from 
+- WSL2 Windows clipboard integration using 'clip.exe'
+- Telescope integration
+
+
+
+
 By Anirudh Roy, India
