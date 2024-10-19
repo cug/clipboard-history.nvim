@@ -1,6 +1,6 @@
 # clipboard-history.nvim
 
-A Neovim plugin that maintains a history of yanked text and allows easy pasting from this history.
+A Neovim plugin that maintains a history of yanked text and allows easy pasting from this history. Integrated support for WSL, allowing you to yank directly to windows clipboard. 
 
 ## Features
 
@@ -8,6 +8,8 @@ A Neovim plugin that maintains a history of yanked text and allows easy pasting 
 - Displays a window with the clipboard history
 - Allows selection and pasting from the history
 - Configurable maximum history size
+- Clear clipboard history
+- Yank text directly to clip.exe (useful for WSL users)
 
 ## Installation
 
@@ -36,11 +38,20 @@ use {
 
 ## Configuration
 
-You can configure the maximum numbner of items stored in the clipboard history:
+You can configure the maximum numbner of items stored in the clipboard history
+You can also set if you are using WSL
 
 For packer.nvim:
 ```lua
-vim.g.clipboard_history_max_history = 200  -- Set before loading the plugin
+use {
+  "royanirudd/clipboard-history.nvim",
+  config = function()
+    require("clipboard-history").setup({
+      max_history = 30,  -- Maximum number of items to store in the clipboard history
+      enable_wsl_features = false,  -- Set to true if you're using WSL and want Windows clipboard integration
+    })
+  end
+}
 ```
 
 For lazy.nvim:
@@ -48,7 +59,8 @@ For lazy.nvim:
 {
     'royanirudd/clipboard-history.nvim',
     opts = {
-        max_history = 200  -- Optional: set max history (default 100)
+        max_history = 200,  -- Optional: set max history (default 100)
+        enable_wsl_features = false,  -- Set to true if you're using WSL and want Windows clipboard integration
     }
 }
 ```
@@ -70,6 +82,12 @@ To clear clipboard history
 :ClipboardClear
 ```
 Clears entire clipboard history
+
+To yank text to windows
+```vim
+:'<,'>ClipboardYankToWindows
+```
+NOTE: The "'<,'>" Should come pre populated once you enter command mode after highlighting text
 
 ## Pull requests
 Feel free to change anything and submit a pull request!
