@@ -16,3 +16,7 @@ end, {})
 vim.api.nvim_create_user_command("ClipboardClear", function()
 	require("clipboard-history").clear_history()
 end, {})
+
+vim.api.nvim_create_user_command("ClipboardYankToWindows", function()
+	require("clipboard-history.wsl").yank_to_windows_clipboard()
+end, { range = true })

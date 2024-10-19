@@ -1,5 +1,7 @@
 local M = {}
 
+local wsl = require("clipboard-history.wsl")
+
 local function log_debug(message)
 	local log_file = io.open(vim.fn.stdpath("data") .. "/clipboard_history_debug.log", "a")
 	if log_file then
@@ -25,7 +27,6 @@ local function load_history()
 			_G.clipboard_history = vim.fn.json_decode(content)
 		end
 	end
-	-- Ensure items table exists
 	_G.clipboard_history.items = _G.clipboard_history.items or {}
 end
 
@@ -54,7 +55,6 @@ function M.setup(opts)
 				if type(yanked_text) == "string" and #yanked_text > 0 then
 					log_debug("Yanked text is valid")
 
-					-- Check if this is a duplicate event
 					local current_time = vim.loop.now()
 					if yanked_text == last_yanked_text and current_time - last_yank_time < 100 then
 						log_debug("Duplicate yank event detected, ignoring")
@@ -93,6 +93,27 @@ function M.setup(opts)
 			save_history()
 		end,
 	})
+
+	if opts.enable_wsl_features then
+		vim.api.nvim_create_user_command("ClipboardYankToWindows", function(args)
+			local status, err = pcall(function()
+				local mode = vim.api.nvim_get_mode().mode
+
+				log_debug("Current mode: " .. mode)
+
+				if mode:sub(1, 1) == "v" or mode:sub(1, 1) == "V" or mode == "\22" then
+					wsl.yank_to_windows_clipboard()
+				else
+					print("Please select text before using ClipboardYankToWindows")
+					log_debug("No text selected. Mode: " .. mode)
+				end
+			end)
+			if not status then
+				print("Error in ClipboardYankToWindows: " .. tostring(err))
+				log_debug("Error in ClipboardYankToWindows: " .. tostring(err))
+			end
+		end, { range = true })
+	end
 end
 
 function M.clear_history()
@@ -101,4 +122,8 @@ function M.clear_history()
 	print("Clipboard history cleared")
 end
 
-return M
+return {
+	setup = M.setup,
+	clear_history = M.clear_history,
+	yank_to_windows_clipboard = wsl.yank_to_windows_clipboard,
+}
