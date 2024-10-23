@@ -27,7 +27,7 @@ function M.yank_to_windows_clipboard()
 
 	lines[1] = lines[1]:sub(start_pos[3])
 
-	local selected_text = table.concat(lines, "\n")
+	local selected_text = table.concat(lines, " ")
 
 	log_debug("Selected text: " .. vim.inspect(selected_text))
 
