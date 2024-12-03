@@ -131,7 +131,7 @@ local function setup_number_navigation()
 		end, { buffer = buf })
 	end
 
-	vim.keymap.set("n", "j", function()
+	vim.keymap.set("n", "k", function()
 		if number_buffer ~= "" then
 			go_to_line()
 		else
@@ -139,7 +139,7 @@ local function setup_number_navigation()
 		end
 	end, { buffer = buf })
 
-	vim.keymap.set("n", "k", function()
+	vim.keymap.set("n", "i", function()
 		if number_buffer ~= "" then
 			go_to_line()
 		else
